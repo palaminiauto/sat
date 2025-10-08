@@ -15,20 +15,11 @@
   button:disabled{background-color:#ccc; cursor:not-allowed;}
   #targaMsg,#alertObbligatorio{font-weight:bold; margin-top:5px; color:red; font-size:16px;text-align: center}
   #successOverlay{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,0.95); z-index:100; text-align:center; padding:50px 20px; font-size:22px; font-weight:bold; color:green; max-width:90%; max-height:80%; overflow-y:auto; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
-  #loadingScreen{position:fixed; top:0; left:0; width:100%; height:100%; background:#e6f0fa; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:200;}
-  #loadingScreen h3{color:#1a73e8; font-size:26px; margin-bottom:20px;}
-  .spinner{border:5px solid #f3f3f3; border-top:5px solid #1a73e8; border-radius:50%; width:60px; height:60px; animation:spin 1s linear infinite;}
-  @keyframes spin{0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}
 </style>
 </head>
 <body onload="init()">
 
-<div id="loadingScreen">
-  <h3>Caricamento in corso...</h3>
-  <div class="spinner"></div>
-</div>
-
-<div id="formWrapper" style="display:none;">
+<div id="formWrapper">
   <h2>PRENOTAZIONE APPUNTAMENTO LOCALIZZATORE SATELLITARE ASSICURATIVO o MOVE-IN</h2>
   <h4>PALAMINI AUTO, Via San Luigi 1/A, Cesano Maderno</h4>
   <h4>Si ricorda di rispettare l'orario scelto, grazie.</h4>
@@ -37,7 +28,7 @@
     <label>EMAIL:</label>
     <input type="email" id="email" inputmode="email" autocomplete="email" onchange="aggiornaStatoPrenota()">
 
-     <label>TARGA AUTO:</label>
+    <label>TARGA AUTO:</label>
     <input type="text" id="targa" maxlength="7" onchange="aggiornaStatoPrenota()">
   
     <label>NOME E COGNOME ASSICURATO:</label>
@@ -53,15 +44,15 @@
 
     <label>LAVORAZIONE RICHIESTA</label>
     <select id="lavorazione" onchange="aggiornaVisibilita()">
-    <option value="">Seleziona...</option>       <!-- voce iniziale -->
-    <option value="montaggio">MONTAGGIO (45 minuti di fermo auto)</option>     <!-- voce 1 -->
-    <option value="smontaggio">SMONTAGGIO (45 minuti di fermo auto)</option>         <!-- voce 2 -->
-    <option value="smontmont">Smontaggio + Montaggio (1,5 ora di fermo auto) (PER CAMBIO NUMERO DI POLIZZA)</option>
-    <option value="anomalia">Anomalia  - Verifica - Guasto Localizzatore (4 ore di fermo auto)</option>
-    <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "eventuali note cliente" la data e l'ora dell'appuntamento che si vuole cancellare)</option>
-  </select>
+      <option value="">Seleziona...</option>
+      <option value="montaggio">MONTAGGIO (45 minuti di fermo auto)</option>
+      <option value="smontaggio">SMONTAGGIO (45 minuti di fermo auto)</option>
+      <option value="smontmont">Smontaggio + Montaggio (1,5 ora di fermo auto)</option>
+      <option value="anomalia">Anomalia - Verifica - Guasto Localizzatore (4 ore di fermo auto)</option>
+      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO</option>
+    </select>
 
-     <label>EVENTUALI NOTE CLIENTE:</label>
+    <label>EVENTUALI NOTE CLIENTE:</label>
     <input type="text" id="notecliente">
     
     <label>DATA APPUNTAMENTO:</label>
@@ -88,7 +79,8 @@ async function init() {
 
     if (data.error) throw new Error(data.error);
 
-    const dateDisponibili = data.date || [];
+    dateDisponibili = data.date || [];
+    console.log('Date disponibili:', dateDisponibili);
 
     const select = document.getElementById("dataAppuntamento");
     select.innerHTML = '<option value="">Seleziona...</option>'; // reset
@@ -107,9 +99,8 @@ async function init() {
 
 function aggiornaStatoPrenota(){
   const btn = document.getElementById("prenota");
-  const tuttiCampi = ["email","nomeFlotta","targa","marcaModello","kmauto","nomeCognome","telefono"]
+  const tuttiCampi = ["email","nomeCognome","telefono"]
     .every(id => document.getElementById(id).value.trim() !== "") &&
-    targaValida &&
     document.getElementById("dataAppuntamento").value !== "";
 
   btn.disabled = !tuttiCampi;
@@ -123,14 +114,16 @@ async function invia(){
 
   const dati = {
     email: document.getElementById("email").value.trim(),
-    nomeFlotta: document.getElementById("nomeFlotta").value.trim(),
     targa: document.getElementById("targa").value.trim(),
-    marcaModello: document.getElementById("marcaModello").value.trim(),
-    kmauto: document.getElementById("kmauto").value.trim(),
     nomeCognome: document.getElementById("nomeCognome").value.trim(),
     telefono: document.getElementById("telefono").value.trim(),
+    compagnia: document.getElementById("compagnia").value,
+    lavorazione: document.getElementById("lavorazione").value,
+    notecliente: document.getElementById("notecliente").value,
     dataAppuntamento: document.getElementById("dataAppuntamento").value
   };
+
+  console.log('Invio dati:', dati);
 
   fetch(API_URL, {
     method: 'POST',
@@ -138,13 +131,11 @@ async function invia(){
   })
   .then(response => response.json())
   .then(result => console.log('Risultato:', result))
-  .catch(error => console.error('Errore (non bloccante):', error));
+  .catch(error => console.error('Errore invio dati:', error));
 
   setTimeout(() => {
     document.getElementById("formWrapper").style.display="none";
-    const overlay = document.getElementById("successOverlay");
-    overlay.style.display="block";
-    overlay.scrollIntoView({behavior:"smooth", block:"center"});
+    document.getElementById("successOverlay").style.display="block";
   }, 2500);
 }
 </script>
