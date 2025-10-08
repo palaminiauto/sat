@@ -44,7 +44,7 @@
 
     <label>LAVORAZIONE RICHIESTA</label>
     <select id="lavorazione" onchange="aggiornaVisibilita()">
-      <option value="">Seleziona...</option>
+      <option value="" selected disabled>Seleziona...</option>
       <option value="montaggio">MONTAGGIO (45 minuti di fermo auto)</option>
       <option value="smontaggio">SMONTAGGIO (45 minuti di fermo auto)</option>
       <option value="smontmont">SMONTAGGIO + MONTAGGIO da stessa auto (1,5 ora di fermo auto)</option>
@@ -57,7 +57,7 @@
     
     <label>DATA APPUNTAMENTO:</label>
     <select id="dataAppuntamento" onchange="aggiornaStatoPrenota()">
-      <option value="">Seleziona...</option>
+      <option value="" selected disabled>Seleziona...</option>
     </select>
 
     <div id="alertObbligatorio">❌ Attenzione: tutti i campi sono obbligatori</div>
