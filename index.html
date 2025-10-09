@@ -17,6 +17,7 @@
   button{background-color:#1a73e8; color:white; border:none; cursor:pointer; margin-top:15px; font-size:20px; padding:18px; border-radius:8px; width:100%;}
   button:disabled{background-color:#ccc; cursor:not-allowed;}
   #alertObbligatorio{font-weight:bold; margin-top:5px; color:red; font-size:16px;text-align: center}
+  #alertAnnullamento{display:none; font-weight:bold; margin-top:10px; color:red; font-size:15px; text-align:center; background:#ffe6e6; padding:12px; border-radius:8px; border:2px solid red;}
   #successOverlay{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,0.95); z-index:100; text-align:center; padding:50px 20px; font-size:22px; font-weight:bold; color:green; max-width:90%; max-height:80%; overflow-y:auto; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
   .campo-condizionale{display:none;}
   .avviso-importante{background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:15px; margin:20px 0; font-size:14px; line-height:1.6; color:#856404; text-align:center;}
@@ -51,7 +52,7 @@
     <div class="avviso-importante">
       <strong>IMPORTANTE DA LEGGERE!</strong>
       Per gli smontaggi: munirsi TASSATIVAMENTE del foglio di installazione per conoscere la posizione del localizzatore all'interno dell'auto (NON serve se si conosce l'ESATTA posizione del localizzatore all'interno dell'auto). 
-      <strong>ATTENZIONE:</strong> L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br><br>
+      <br><strong>ATTENZIONE:</strong> L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br>
       NON prenotare tramite questo modulo la SOLA consegna o la riconsegna del localizzatore (ConTe, BeRebel), è sufficiente passare in officina dal lunedì al venerdì 9:00 - 12:15 e 14:30 - 17:30 per il ritiro senza appuntamento. Prenotare solo se si desidera la lavorazione di montaggio o smontaggio.
     </div>
 
@@ -62,12 +63,15 @@
       <option value="smontaggio">SMONTAGGIO (50 minuti di fermo auto)</option>
       <option value="smontmont">SMONTAGGIO + MONTAGGIO (1,5 ora di fermo auto)</option>
       <option value="anomalia">ANOMALIA - GUASTO - VERIFICA LOCALIZZATORE (4 ore di fermo auto)</option>
-      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "note cliente"
-        la data e l'ora dell'appuntamento che si vuole cancellare)</option>
+      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO</option>
     </select>
 
+    <div id="alertAnnullamento">
+      ⚠️ IMPORTANTE: Scrivere nel campo "note cliente" la data e l'ora dell'appuntamento che si vuole cancellare
+    </div>
+
     <label>EVENTUALI NOTE CLIENTE:</label>
-    <input type="text" id="notecliente">
+    <input type="text" id="notecliente" onchange="aggiornaStatoPrenota()">
     
     <div id="wrapperData" class="campo-condizionale">
       <label>DATA APPUNTAMENTO:</label>
@@ -157,6 +161,14 @@ function aggiornaVisibilita() {
   const lavorazione = document.getElementById("lavorazione").value;
   const wrapperData = document.getElementById("wrapperData");
   const selectData = document.getElementById("dataAppuntamento");
+  const alertAnnullamento = document.getElementById("alertAnnullamento");
+  
+  // Mostra alert se è annullamento
+  if (lavorazione === "annullamento") {
+    alertAnnullamento.style.display = "block";
+  } else {
+    alertAnnullamento.style.display = "none";
+  }
   
   // Mostra data solo per le prime 4 lavorazioni
   const richiedeData = ["montaggio", "smontaggio", "smontmont", "anomalia"].includes(lavorazione);
@@ -201,7 +213,10 @@ function aggiornaStatoPrenota() {
   // Data obbligatoria solo se richiesta
   const dataValida = !richiedeData || document.getElementById("dataAppuntamento").value !== "";
   
-  const tuttiCampiOk = campiBase && lavorazioneValida && dataValida;
+  // Note cliente obbligatorie se annullamento
+  const noteValide = lavorazione !== "annullamento" || document.getElementById("notecliente").value.trim() !== "";
+  
+  const tuttiCampiOk = campiBase && lavorazioneValida && dataValida && noteValide;
   
   btn.disabled = !tuttiCampiOk;
   document.getElementById("alertObbligatorio").style.display = tuttiCampiOk ? "none" : "block";
