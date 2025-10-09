@@ -29,8 +29,7 @@
 <div id="formWrapper">
   <h2>PRENOTAZIONE APPUNTAMENTO LOCALIZZATORE SATELLITARE ASSICURATIVO o MOVE-IN</h2>
   <h4>PALAMINI AUTO, Via San Luigi 1/A, Cesano Maderno</h4>
-  <h4>Si ricorda di rispettare l'orario scelto, grazie.</h4>
-
+  
   <form id="prenotaForm" oninput="aggiornaStatoPrenota(); return false;">
     <label>EMAIL:</label>
     <input type="email" id="email" inputmode="email" autocomplete="email" onchange="aggiornaStatoPrenota()">
@@ -52,7 +51,7 @@
     <div class="avviso-importante">
       <strong>IMPORTANTE DA LEGGERE!</strong>
       Per gli smontaggi: munirsi TASSATIVAMENTE del foglio di installazione per conoscere la posizione del localizzatore all'interno dell'auto (NON serve se si conosce l'ESATTA posizione del localizzatore all'interno dell'auto).
-      <br>ATTENZIONE: L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br>
+      <br><br>ATTENZIONE: L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br><br>
       NON prenotare tramite questo modulo la SOLA consegna o la riconsegna del localizzatore (ConTe, BeRebel), è sufficiente passare in officina dal lunedì al venerdì 9:00 - 12:15 e 14:30 - 17:30 per il ritiro senza appuntamento. Prenotare solo se si desidera la lavorazione di montaggio o smontaggio.
     </div>
 
@@ -79,14 +78,13 @@
         <option value="" selected disabled>Seleziona...</option>
       </select>
     </div>
-
-    <div id="alertObbligatorio">❌ Attenzione: tutti i campi sono obbligatori</div>
     
     <div style="background:#ffe6e6; border:2px solid red; border-radius:8px; padding:12px; margin-top:15px; color:red; font-weight:bold; font-size:15px; text-align:center;">
       ⏰ Si raccomanda di rispettare l'orario prescelto. Con un ritardo superiore ai 10 minuti l'appuntamento verrà considerato annullato.
     </div>
     
     <button type="button" id="prenota" onclick="invia()" disabled>Prenota</button>
+    <div id="alertObbligatorio">❌ Attenzione: tutti i campi sono obbligatori</div>
   </form>
 </div>
 
