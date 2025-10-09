@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MODULO PNEUMATICI</title>
+<title>MODULO PRENOTAZIONE SAT</title>
 <style>
   body { font-family: Roboto, Arial; margin:0; padding:0; display:flex; justify-content:center; background:#e6f0fa; font-size:16px; }
   #formWrapper { width:100%; max-width:480px; padding:10px 20px; background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.1); margin:20px 0; }
@@ -11,10 +11,13 @@
   h4{text-align:center; font-size:16px; color:#555; margin:5px 0; font-weight:normal;}
   label{display:block; font-weight:bold; margin-top:18px; font-size:16px;text-align: center;}
   input,select,textarea{width:100%; padding:16px 14px; margin-top:5px; font-size:20px; line-height:1.4; border-radius:8px; border:1px solid #ccc; box-sizing:border-box;display: block;text-align: center;}
+  select{padding:12px 14px; height:auto; min-height:56px;}
+  select option{padding:8px; line-height:1.4; white-space:normal; word-wrap:break-word;}
   button{background-color:#1a73e8; color:white; border:none; cursor:pointer; margin-top:15px; font-size:20px; padding:18px; border-radius:8px; width:100%;}
   button:disabled{background-color:#ccc; cursor:not-allowed;}
-  #targaMsg,#alertObbligatorio{font-weight:bold; margin-top:5px; color:red; font-size:16px;text-align: center}
+  #alertObbligatorio{font-weight:bold; margin-top:5px; color:red; font-size:16px;text-align: center}
   #successOverlay{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,0.95); z-index:100; text-align:center; padding:50px 20px; font-size:22px; font-weight:bold; color:green; max-width:90%; max-height:80%; overflow-y:auto; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+  .campo-condizionale{display:none;}
 </style>
 </head>
 <body onload="init()">
@@ -39,7 +42,7 @@
 
     <label>NOME COMPAGNIA ASSICURATIVA o PROVIDER MOVE-IN</label>
     <select id="compagnia" onchange="aggiornaStatoPrenota()">
-      <option value="">Seleziona...</option>
+      <option value="" disabled selected>Seleziona...</option>
     </select>
 
     <label>LAVORAZIONE RICHIESTA</label>
@@ -49,16 +52,18 @@
       <option value="smontaggio">SMONTAGGIO (45 minuti di fermo auto)</option>
       <option value="smontmont">SMONTAGGIO + MONTAGGIO da stessa auto (1,5 ora di fermo auto)</option>
       <option value="anomalia">ANOMALIA - GUASTO - VERIFICA LOCALIZZATORE (4 ore di fermo auto)</option>
-      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "note cliente" la data e l'ora dell'appuntamento che si vuole cancellare) </option>
+      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "note cliente" la data e l'ora dell'appuntamento che si vuole cancellare)</option>
     </select>
 
     <label>EVENTUALI NOTE CLIENTE:</label>
     <input type="text" id="notecliente">
     
-    <label>DATA APPUNTAMENTO:</label>
-    <select id="dataAppuntamento" onchange="aggiornaStatoPrenota()">
-      <option value="" selected disabled>Seleziona...</option>
-    </select>
+    <div id="wrapperData" class="campo-condizionale">
+      <label>DATA APPUNTAMENTO:</label>
+      <select id="dataAppuntamento" onchange="aggiornaStatoPrenota()">
+        <option value="" selected disabled>Seleziona...</option>
+      </select>
+    </div>
 
     <div id="alertObbligatorio">❌ Attenzione: tutti i campi sono obbligatori</div>
     <button type="button" id="prenota" onclick="invia()" disabled>Prenota</button>
@@ -68,28 +73,64 @@
 <div id="successOverlay">APPUNTAMENTO CONFERMATO! Riceverete una copia all'indirizzo email indicato!</div>
 
 <script>
+// ========================================
+// DATABASE COMPAGNIE ASSICURATIVE
+// ========================================
+const COMPAGNIE = [
+  "Allianz",
+  "Generali",
+  "UnipolSai",
+  "Reale Mutua",
+  "AXA",
+  "Zurich",
+  "Cattolica",
+  "Sara Assicurazioni",
+  "HDI Assicurazioni",
+  "Groupama",
+  "Linear",
+  "Direct Line",
+  "Verti",
+  "Prima",
+  "ConTe.it",
+  "Genialloyd",
+  "Quixa",
+  "Move-In Provider",
+  "Altro"
+];
+
+// ========================================
+// CONFIGURAZIONE API
+// ========================================
 const API_URL = 'https://script.google.com/macros/s/AKfycbwoC5ZEaTAGQru63oUO8DyD0Y20bP5hblqtjFG8CWjudmPM5TfcFZsExi6rs4qyeEsR/exec';
 
-let dateDisponibili = [];
+let dateDisponibiliMontaggio = [];
+let dateDisponibiliAnomalia = [];
 
+// ========================================
+// INIZIALIZZAZIONE
+// ========================================
 async function init() {
+  // Popola dropdown compagnie
+  const selectCompagnia = document.getElementById("compagnia");
+  COMPAGNIE.forEach(c => {
+    const option = document.createElement("option");
+    option.value = c;
+    option.textContent = c;
+    selectCompagnia.appendChild(option);
+  });
+
+  // Carica date disponibili
   try {
     const response = await fetch(API_URL + '?action=getAllData');
     const data = await response.json();
 
     if (data.error) throw new Error(data.error);
 
-    dateDisponibili = data.date || [];
-    console.log('Date disponibili:', dateDisponibili);
-
-    const select = document.getElementById("dataAppuntamento");
-    select.innerHTML = '<option value="">Seleziona...</option>'; // reset
-    dateDisponibili.forEach(d => {
-      const option = document.createElement("option");
-      option.value = d;
-      option.textContent = d;
-      select.appendChild(option);
-    });
+    dateDisponibiliMontaggio = data.dateMontaggio || [];
+    dateDisponibiliAnomalia = data.dateAnomalia || [];
+    
+    console.log('Date montaggio:', dateDisponibiliMontaggio);
+    console.log('Date anomalia:', dateDisponibiliAnomalia);
 
   } catch (error) {
     console.error('Errore caricamento date:', error);
@@ -97,29 +138,79 @@ async function init() {
   }
 }
 
-function aggiornaStatoPrenota(){
-  const btn = document.getElementById("prenota");
-  const tuttiCampi = ["email","nomeCognome","telefono"]
-    .every(id => document.getElementById(id).value.trim() !== "") &&
-    document.getElementById("dataAppuntamento").value !== "";
-
-  btn.disabled = !tuttiCampi;
-  document.getElementById("alertObbligatorio").style.display = tuttiCampi ? "none" : "block";
+// ========================================
+// GESTIONE VISIBILITÀ CAMPI
+// ========================================
+function aggiornaVisibilita() {
+  const lavorazione = document.getElementById("lavorazione").value;
+  const wrapperData = document.getElementById("wrapperData");
+  const selectData = document.getElementById("dataAppuntamento");
+  
+  // Mostra data solo per le prime 4 lavorazioni
+  const richiedeData = ["montaggio", "smontaggio", "smontmont", "anomalia"].includes(lavorazione);
+  
+  if (richiedeData) {
+    wrapperData.style.display = "block";
+    
+    // Popola dropdown in base al tipo di lavorazione
+    selectData.innerHTML = '<option value="" selected disabled>Seleziona...</option>';
+    
+    const dateArray = lavorazione === "anomalia" ? dateDisponibiliAnomalia : dateDisponibiliMontaggio;
+    
+    dateArray.forEach(d => {
+      const option = document.createElement("option");
+      option.value = d;
+      option.textContent = d;
+      selectData.appendChild(option);
+    });
+  } else {
+    wrapperData.style.display = "none";
+    selectData.value = "";
+  }
+  
+  aggiornaStatoPrenota();
 }
 
-async function invia(){
+// ========================================
+// VALIDAZIONE FORM
+// ========================================
+function aggiornaStatoPrenota() {
+  const btn = document.getElementById("prenota");
+  const lavorazione = document.getElementById("lavorazione").value;
+  const richiedeData = ["montaggio", "smontaggio", "smontmont", "anomalia"].includes(lavorazione);
+  
+  // Campi sempre obbligatori
+  const campiBase = ["email", "targa", "nomeCognome", "telefono", "compagnia"].every(
+    id => document.getElementById(id).value.trim() !== ""
+  );
+  
+  const lavorazioneValida = lavorazione !== "";
+  
+  // Data obbligatoria solo se richiesta
+  const dataValida = !richiedeData || document.getElementById("dataAppuntamento").value !== "";
+  
+  const tuttiCampiOk = campiBase && lavorazioneValida && dataValida;
+  
+  btn.disabled = !tuttiCampiOk;
+  document.getElementById("alertObbligatorio").style.display = tuttiCampiOk ? "none" : "block";
+}
+
+// ========================================
+// INVIO DATI
+// ========================================
+async function invia() {
   const btn = document.getElementById("prenota");
   btn.disabled = true;
   btn.textContent = "Invio in corso, attendere...";
 
   const dati = {
     email: document.getElementById("email").value.trim(),
-    targa: document.getElementById("targa").value.trim(),
+    targa: document.getElementById("targa").value.trim().toUpperCase(),
     nomeCognome: document.getElementById("nomeCognome").value.trim(),
     telefono: document.getElementById("telefono").value.trim(),
     compagnia: document.getElementById("compagnia").value,
     lavorazione: document.getElementById("lavorazione").value,
-    notecliente: document.getElementById("notecliente").value,
+    notecliente: document.getElementById("notecliente").value.trim(),
     dataAppuntamento: document.getElementById("dataAppuntamento").value
   };
 
@@ -134,8 +225,8 @@ async function invia(){
   .catch(error => console.error('Errore invio dati:', error));
 
   setTimeout(() => {
-    document.getElementById("formWrapper").style.display="none";
-    document.getElementById("successOverlay").style.display="block";
+    document.getElementById("formWrapper").style.display = "none";
+    document.getElementById("successOverlay").style.display = "block";
   }, 2500);
 }
 </script>
