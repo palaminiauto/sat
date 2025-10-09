@@ -11,13 +11,16 @@
   h4{text-align:center; font-size:16px; color:#555; margin:5px 0; font-weight:normal;}
   label{display:block; font-weight:bold; margin-top:18px; font-size:16px;text-align: center;}
   input,select,textarea{width:100%; padding:16px 14px; margin-top:5px; font-size:20px; line-height:1.4; border-radius:8px; border:1px solid #ccc; box-sizing:border-box;display: block;text-align: center;}
-  select{padding:12px 14px; height:auto; min-height:56px;}
-  select option{padding:8px; line-height:1.4; white-space:normal; word-wrap:break-word;}
+  select{padding:12px 14px; height:auto;}
+  select option{text-align:left;}
+  #compagnia, #lavorazione{text-align:left;}
   button{background-color:#1a73e8; color:white; border:none; cursor:pointer; margin-top:15px; font-size:20px; padding:18px; border-radius:8px; width:100%;}
   button:disabled{background-color:#ccc; cursor:not-allowed;}
   #alertObbligatorio{font-weight:bold; margin-top:5px; color:red; font-size:16px;text-align: center}
   #successOverlay{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,0.95); z-index:100; text-align:center; padding:50px 20px; font-size:22px; font-weight:bold; color:green; max-width:90%; max-height:80%; overflow-y:auto; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
   .campo-condizionale{display:none;}
+  .avviso-importante{background:#fff3cd; border:2px solid #ffc107; border-radius:8px; padding:15px; margin:20px 0; font-size:14px; line-height:1.6; color:#856404; text-align:center;}
+  .avviso-importante strong{display:block; font-size:16px; margin-bottom:8px; color:#000; font-weight:bold;}
 </style>
 </head>
 <body onload="init()">
@@ -44,6 +47,12 @@
     <select id="compagnia" onchange="aggiornaStatoPrenota()">
       <option value="" disabled selected>Seleziona...</option>
     </select>
+
+    <div class="avviso-importante">
+      <strong>IMPORTANTE DA LEGGERE!</strong>
+      Per gli smontaggi: munirsi TASSATIVAMENTE del foglio di installazione per conoscere la posizione del localizzatore all'interno dell'auto (NON serve se si conosce l'ESATTA posizione del localizzatore all'interno dell'auto). <strong>ATTENZIONE:</strong> L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br><br>
+      NON prenotare tramite questo modulo la SOLA consegna o la riconsegna del localizzatore (ConTe, BeRebel), è sufficiente passare in officina dal lunedì al venerdì 9:00 - 12:15 e 14:30 - 17:30 per il ritiro senza appuntamento. Prenotare solo se si desidera la lavorazione di montaggio o smontaggio.
+    </div>
 
     <label>LAVORAZIONE RICHIESTA</label>
     <select id="lavorazione" onchange="aggiornaVisibilita()">
@@ -77,25 +86,26 @@
 // DATABASE COMPAGNIE ASSICURATIVE
 // ========================================
 const COMPAGNIE = [
-  "Allianz",
-  "Generali",
-  "UnipolSai",
-  "Reale Mutua",
-  "AXA",
-  "Zurich",
-  "Cattolica",
-  "Sara Assicurazioni",
-  "HDI Assicurazioni",
-  "Groupama",
-  "Linear",
-  "Direct Line",
-  "Verti",
-  "Prima",
-  "ConTe.it",
-  "Genialloyd",
-  "Quixa",
-  "Move-In Provider",
-  "Altro"
+  "Unipol-Unipoltech",
+  "Unipol-Octo Telematics",
+  "Linear-Unipoltech",
+  "Arca-Unipoltech",
+  "BeRebel-Unipoltech (costo installazione o disinstallazione a carico cliente di 18,30€)",
+  "MoveIN-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI A PARTIRE DAL PAGAMENTO A VIASAT)",
+  "MoveIN-Octo Telematics",
+  "Groupama-Fairconnect",
+  "Generali-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Generali-IoTelematics (PRENDERE APPUNTAMENTO NON PRIMA DI 6 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Generali-Infomobility (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Genertel-Jeniot-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Cattolica-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Cattolica-Io Telematics (PRENDERE APPUNTAMENTO NON PRIMA DI 6 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Cattolica-Infomobilty (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Tua Ass-Infomobility",
+  "IntesaSanPaolo-FairConnect",
+  "IntesaSanPaolo-Octo Telematics",
+  "Allianz-Octo Telematics",
+  "ConTe-Octo Telematics (costo installazione o disinstallazione a carico cliente di 12,20€)"
 ];
 
 // ========================================
