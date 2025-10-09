@@ -50,18 +50,20 @@
 
     <div class="avviso-importante">
       <strong>IMPORTANTE DA LEGGERE!</strong>
-      Per gli smontaggi: munirsi TASSATIVAMENTE del foglio di installazione per conoscere la posizione del localizzatore all'interno dell'auto (NON serve se si conosce l'ESATTA posizione del localizzatore all'interno dell'auto). <strong>ATTENZIONE:</strong> L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br><br>
+      Per gli smontaggi: munirsi TASSATIVAMENTE del foglio di installazione per conoscere la posizione del localizzatore all'interno dell'auto (NON serve se si conosce l'ESATTA posizione del localizzatore all'interno dell'auto). 
+      <strong>ATTENZIONE:</strong> L'abitacolo e il baule del veicolo devono essere PULITI e PRIVI di oggetti personali.<br><br>
       NON prenotare tramite questo modulo la SOLA consegna o la riconsegna del localizzatore (ConTe, BeRebel), è sufficiente passare in officina dal lunedì al venerdì 9:00 - 12:15 e 14:30 - 17:30 per il ritiro senza appuntamento. Prenotare solo se si desidera la lavorazione di montaggio o smontaggio.
     </div>
 
     <label>LAVORAZIONE RICHIESTA</label>
     <select id="lavorazione" onchange="aggiornaVisibilita()">
       <option value="" selected disabled>Seleziona...</option>
-      <option value="montaggio">MONTAGGIO (45 minuti di fermo auto)</option>
-      <option value="smontaggio">SMONTAGGIO (45 minuti di fermo auto)</option>
-      <option value="smontmont">SMONTAGGIO + MONTAGGIO da stessa auto (1,5 ora di fermo auto)</option>
+      <option value="montaggio">MONTAGGIO (50 minuti di fermo auto)</option>
+      <option value="smontaggio">SMONTAGGIO (50 minuti di fermo auto)</option>
+      <option value="smontmont">SMONTAGGIO + MONTAGGIO (1,5 ora di fermo auto)</option>
       <option value="anomalia">ANOMALIA - GUASTO - VERIFICA LOCALIZZATORE (4 ore di fermo auto)</option>
-      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "note cliente" la data e l'ora dell'appuntamento che si vuole cancellare)</option>
+      <option value="annullamento">ANNULLAMENTO APPUNTAMENTO (Scrivere nel campo "note cliente"
+        la data e l'ora dell'appuntamento che si vuole cancellare)</option>
     </select>
 
     <label>EVENTUALI NOTE CLIENTE:</label>
@@ -90,22 +92,22 @@ const COMPAGNIE = [
   "Unipol-Octo Telematics",
   "Linear-Unipoltech",
   "Arca-Unipoltech",
-  "BeRebel-Unipoltech (costo installazione o disinstallazione a carico cliente di 18,30€)",
-  "MoveIN-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI A PARTIRE DAL PAGAMENTO A VIASAT)",
+  "BeRebel-Unipoltech (costo a carico cliente di 18,30€)",
+  "MoveIN-Viasat (prendere appuntamento 7gg dopo il pagamento a Viasat)",
   "MoveIN-Octo Telematics",
   "Groupama-Fairconnect",
-  "Generali-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Generali-IoTelematics (PRENDERE APPUNTAMENTO NON PRIMA DI 6 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Generali-Infomobility (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Genertel-Jeniot-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Cattolica-Viasat (PRENDERE APPUNTAMENTO NON PRIMA DI 5 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Cattolica-Io Telematics (PRENDERE APPUNTAMENTO NON PRIMA DI 6 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
-  "Cattolica-Infomobilty (PRENDERE APPUNTAMENTO NON PRIMA DI 7 GIORNI LAVORATIVI DALL'EMISSIONE DELLA POLIZZA)",
+  "Generali-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
+  "Generali-IoTelematics (prendere appuntamento 7gg dopo emissione polizza)",
+  "Generali-Infomobility (prendere appuntamento 7gg dopo emissione polizza)",
+  "Genertel-Jeniot-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
+  "Cattolica-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
+  "Cattolica-Io Telematics (prendere appuntamento 7gg dopo emissione polizza)",
+  "Cattolica-Infomobilty (prendere appuntamento 7gg dopo emissione polizza)",
   "Tua Ass-Infomobility",
   "IntesaSanPaolo-FairConnect",
   "IntesaSanPaolo-Octo Telematics",
   "Allianz-Octo Telematics",
-  "ConTe-Octo Telematics (costo installazione o disinstallazione a carico cliente di 12,20€)"
+  "ConTe-Octo Telematics (costo a carico cliente di 12,20€)"
 ];
 
 // ========================================
