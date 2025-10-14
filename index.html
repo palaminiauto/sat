@@ -142,11 +142,10 @@ let dateDisponibiliAnomalia = [];
 // INIZIALIZZAZIONE
 // ========================================
 async function init() {
-  // Timer di sicurezza: refresh dopo 20 secondi se non carica
-  const timeoutRefresh = setTimeout(() => {
-    console.log('Timeout raggiunto - refresh pagina');
-    location.reload();
-  }, 20000);
+  // Caricamento finto di 5 secondi
+  setTimeout(() => {
+    document.getElementById('loadingOverlay').style.display = 'none';
+  }, 5000);
 
   // Popola dropdown compagnie
   const selectCompagnia = document.getElementById("compagnia");
@@ -170,16 +169,8 @@ async function init() {
     console.log('Date montaggio:', dateDisponibiliMontaggio);
     console.log('Date anomalia:', dateDisponibiliAnomalia);
 
-    // Caricamento completato con successo
-    clearTimeout(timeoutRefresh);
-    document.getElementById('loadingOverlay').style.display = 'none';
-
   } catch (error) {
     console.error('Errore caricamento date:', error);
-    clearTimeout(timeoutRefresh);
-    
-    // Mostra messaggio di errore e nascondi loading
-    document.getElementById('loadingOverlay').style.display = 'none';
     alert('Errore nel caricamento delle date. Riprova più tardi.');
   }
 }
