@@ -70,10 +70,10 @@
     <label>LAVORAZIONE RICHIESTA</label>
     <select id="lavorazione" onchange="aggiornaVisibilita()">
       <option value="" selected disabled>Seleziona...</option>
-      <option value="montaggio">MONTAGGIO (50 minuti di fermo auto)</option>
-      <option value="smontaggio">SMONTAGGIO (50 minuti di fermo auto)</option>
-      <option value="smontmont">SMONTAGGIO + MONTAGGIO (1,5 ora di fermo auto)</option>
-      <option value="anomalia">ANOMALIA-GUASTO-VERIFICA LOCALIZZATORE (4 ore di fermo auto)</option>
+      <option value="montaggio">MONTAGGIO (massimo 50 minuti di fermo auto)</option>
+      <option value="smontaggio">SMONTAGGIO (massimo 50 minuti di fermo auto)</option>
+      <option value="smontmont">SMONTAGGIO + MONTAGGIO (massimo 1,5 ora di fermo auto)</option>
+      <option value="anomalia">ANOMALIA-GUASTO-VERIFICA LOCALIZZATORE (massimo 3 ore di fermo auto)</option>
       <option value="annullamento">ANNULLAMENTO APPUNTAMENTO</option>
     </select>
 
@@ -107,27 +107,24 @@
 // DATABASE COMPAGNIE ASSICURATIVE
 // ========================================
 const COMPAGNIE = [
-  "Unipol-Unipoltech",
-  "Unipol-Octo Telematics",
-  "Linear-Unipoltech",
-  "Arca-Unipoltech",
-  "BeRebel-Unipoltech (costo a carico cliente di 18,30€)",
+  "Unipol",
+  "Linear",
+  "Arca",
+  "BeRebel (costo a carico cliente di 18,30€)",
   "MoveIN-Viasat (prendere appuntamento 7gg dopo il pagamento a Viasat)",
   "MoveIN-Octo Telematics",
-  "MoveIN-Unipol",
-  "Groupama-Fairconnect",
-  "Generali-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
-  "Generali-IoTelematics (prendere appuntamento 7gg dopo emissione polizza)",
-  "Generali-Infomobility (prendere appuntamento 7gg dopo emissione polizza)",
-  "Genertel-Jeniot-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
-  "Cattolica-Viasat (prendere appuntamento 7gg dopo emissione polizza)",
-  "Cattolica-Io Telematics (prendere appuntamento 7gg dopo emissione polizza)",
-  "Cattolica-Infomobilty (prendere appuntamento 7gg dopo emissione polizza)",
-  "Tua Ass-Infomobility",
-  "IntesaSanPaolo-FairConnect",
-  "IntesaSanPaolo-Octo Telematics",
-  "Allianz-Octo Telematics",
-  "ConTe-Octo Telematics (costo a carico cliente di 12,20€)"
+  "MoveIN-Unipol (prendere appuntamento tra almeno 10gg)",
+  "Groupama",
+  "Generali (prendere appuntamento 7gg dopo emissione polizza)",
+  "Genertel-Jeniot (prendere appuntamento 7gg dopo emissione polizza)",
+  "Cattolica (prendere appuntamento 7gg dopo emissione polizza)",
+  "Tua Assicurazioni",
+  "IntesaSanPaolo",
+  "Allianz",
+  "ConTe-Octo Telematics (costo a carico cliente di 12,20€)",
+  "Sara Assicurazioni",
+  "Italiana Assicurazioni",
+  "ALTRO: Inserire nome compagnia assicurativa nel campo NOTE CLIENTE"
 ];
 
 // ========================================
