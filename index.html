@@ -486,6 +486,7 @@ async function invia() {
       console.error('❌ Errore server:', result.error);
       const errorOverlay = document.getElementById("errorOverlay");
       errorOverlay.style.display = "block";
+      document.getElementById("formWrapper").style.display = "none";
       errorOverlay.scrollIntoView({behavior:"smooth", block:"center"});
       btn.disabled = false;
     }
@@ -494,6 +495,7 @@ async function invia() {
     document.getElementById("sendingOverlay").style.display = "none";
     const errorOverlay = document.getElementById("errorOverlay");
     errorOverlay.style.display = "block";
+    document.getElementById("formWrapper").style.display = "none";
     errorOverlay.scrollIntoView({behavior:"smooth", block:"center"});
     btn.disabled = false;
   }
